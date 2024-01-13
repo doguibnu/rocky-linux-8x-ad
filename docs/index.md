@@ -4,11 +4,11 @@
 
 
 
-Nesta documentação vamos abordar a instalação do **SAMBA-AD-DC** com o sistema operacional **Rocky Linux versão 8.x** servindo como `Active Directory e Controlador de Domínio`. 
+Nesta documentação vamos abordar a instalação do **SAMBA-AD-DC** no sistema operacional **Rocky Linux 8.x** servindo como `Active Directory e Controlador de Domínio`. 
 
-Uma segunda máquina, também com o Rocky Linux 8.x, sendo `Replicador do AD` como uma máquina Backup do **AD**. 
+Uma segunda máquina, com o Rocky Linux 8.x, sendo `Replicador do AD` como uma máquina Backup do **AD**. 
 
-E por último, uma máqina com Rocky Linux 8.x servindo como `Membro e Servidor de Arquivos do AD`. 
+E por último, uma máquina com Rocky Linux 8.x servindo como `Membro e Servidor de Arquivos do AD`. 
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ Linux®. Está em intenso desenvolvimento pela comunidade."
 
 
 
-Assim como o Debian, o Rocky Linux é Robusto, estável e leve, focado em produção, correçõe e atualizações. A versão 8.x conta com suporte de atualização até o ano de 2027, o que por si só é muito importante para administradores de sistema. 
+Assim como o Debian, o Rocky Linux é Robusto, estável e leve, focado em produção, correções e atualizações. A versão 8.x conta com suporte de atualização até o ano de 2027, o que por si só é muito importante para administradores de sistema. 
 
 
 
