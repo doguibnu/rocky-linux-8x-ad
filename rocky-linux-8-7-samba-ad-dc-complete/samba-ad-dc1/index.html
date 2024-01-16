@@ -132,7 +132,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 
     <h3 id="configurar-samba-ad-dc-dc1-controlador-de-dominio">Configurar Samba AD-DC (DC1) Controlador de Domínio</h3>
 <p>=======================================================================</p>
-<p>Update do sistema:</p>
+<p>Executar  um <code>update</code>  e <code>upgrade</code> do sistema:</p>
 <pre><code>yum update -y &amp;&amp; yum upgrade -y 
 </code></pre>
 <p>Instalar o editor de texto <strong>nano</strong>:</p>
@@ -230,7 +230,7 @@ System clock synchronized: yes
 </code></pre>
 <p>=======================================================================</p>
 <h3 id="instalar-as-dependencias-dos-pacotes">Instalar as dependências dos pacotes.</h3>
-<p>Instalar as dependências dos pacotes. Fazer um arquivo do tipo <code>script executável</code> e inserir os comandos:</p>
+<p>Instalar as dependências dos pacotes. Criar um arquivo do tipo <code>script executável</code> e inserir os comandos:</p>
 <pre><code>nano depende.sh
 </code></pre>
 <p>Inserir as linhas abaixo para o seu arquivo:</p>
@@ -467,13 +467,13 @@ Retype password: repetir a mesma senha
 <p>Execute o comando abaixo:</p>
 <pre><code>cp /usr/local/samba/private/krb5.conf /etc/krb5.conf
 </code></pre>
-<p>Reestart o serviço do samba-ad com o comando:</p>
+<p><code>Restart</code>  o serviço do samba-ad com o comando:</p>
 <pre><code>systemctl restart samba-ad-dc
 </code></pre>
-<p>Para parar serviço fazer o comando:</p>
+<p>Para <code>parar</code> serviço fazer o comando:</p>
 <pre><code>systemctl stop samba-ad-dc
 </code></pre>
-<p>Se necessitar desabilitar o serviço, utilizar o comando:</p>
+<p>Se necessitar <code>desabilitar</code> o serviço, utilizar o comando:</p>
 <pre><code>systemctl disable samba-ad-dc
 </code></pre>
 <p>=======================================================================</p>
@@ -545,7 +545,7 @@ Your public key has been saved in /root/.ssh/id_rsa.pub.
 <pre><code>chown root.user-dc2 -R /usr/local/samba/var/locks/sysvol/
 </code></pre>
 <p>Executando um backup do <code>DC1</code> para o <code>DC2</code>. Para testar, execute o comando utilizando a opção <code>--dry-run</code> para  um teste sem alteração:</p>
-<pre><code>rsync --dry-run -XAavz --delete-after --progress --stats /usr/local/samba/var/locks/sysvol/ user-dc2@IP-DC2:/usr/local/samba/var/locks/sysvol/
+<pre><code>rsync --dry-run -XAavz --delete-after --progress --stats /usr/local/samba/var/locks/sysvol user-dc2@IP-DC2:/usr/local/samba/var/locks/sysvol/
 </code></pre>
 <p>O comando <strong>rsync</strong> fará uma copia do <strong>sysvol</strong> de seu <code>DC1</code> (<strong>parte1</strong>) para o <strong>sysvol</strong> de seu <code>DC2</code> (<strong>parte2</strong>):</p>
 <p><code>Parte 1:</code> </p>
@@ -587,7 +587,7 @@ sent 2,011 bytes  received 51 bytes  1,374.67 bytes/sec
 total size is 40  speedup is 0.02 **(DRY RUN)**
 </code></pre>
 <p>Com o resultado positivo, utilize o comando sem a opção <strong>--dry-run</strong>:</p>
-<pre><code>rsync -XAavz --delete-after --progress --stats /usr/local/samba/var/locks/sysvol/ dc2@IP-DC2:/usr/local/samba/var/locks/sysvol/
+<pre><code>rsync -XAavz --delete-after --progress --stats /usr/local/samba/var/locks/sysvol dc2@IP-DC2:/usr/local/samba/var/locks/sysvol/
 </code></pre>
 <p>Para automatizar o processo, inserir o comando no <strong>crontab</strong>. Para aprender mais sobre o crontab clique <a href="https://www.hostinger.com.br/tutoriais/cron-job-guia?ppc_campaign=google_search_generic_hosting_all&amp;bidkw=defaultkeyword&amp;lo=1031952&amp;gclid=CjwKCAjw__ihBhADEiwAXEazJsMs2yOLBskI2NlzC9qK_ovK0G1a9KsbBpIfWGsKR49S0-V8Fa2mHBoCZJsQAvD_BwE">aqui</a></p>
 <h3 id="script-no-crontab">Script no crontab</h3>
@@ -595,7 +595,7 @@ total size is 40  speedup is 0.02 **(DRY RUN)**
 <pre><code>crontab -e
 </code></pre>
 <p>E insira a linha:</p>
-<pre><code>0 12 * * 1-5 root rsync -XAavz --delete-after --progress --stats /usr/local/samba/var/locks/sysvol/ dc2@IP-DC2:/usr/local/samba/var/locks/sysvol/
+<pre><code>0 12 * * 1-5 root rsync -XAavz --delete-after --progress --stats /usr/local/samba/var/locks/sysvol dc2@IP-DC2:/usr/local/samba/var/locks/sysvol/
 </code></pre>
 
   <br>
