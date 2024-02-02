@@ -20,5 +20,5 @@ theme:
   icon:
     repo: fontawesome/brands/github
 
-repo_url: https://github.com/doguibnu/rocky-linux-8-7-samba-ad-dc-complete
+repo_url: https://github.com/doguibnu/rocky-linux-8x-ad
 edit_uri: edit/main/docs
