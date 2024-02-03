@@ -42,7 +42,7 @@
           ]},
           {title: "Editar o arquivo /etc\u00a0/host:", url: "#editar-o-arquivo-etc-host", children: [
           ]},
-          {title: "Veririficar processo do samba rodando:", url: "#veririficar-processo-do-samba-rodando", children: [
+          {title: "Verificar processo do samba rodando:", url: "#verificar-processo-do-samba-rodando", children: [
           ]},
           {title: "Remover o arquivo /etc/krb5.conf", url: "#remover-o-arquivo-etckrb5conf", children: [
           ]},
@@ -67,6 +67,10 @@
           {title: "Configurar o Firewall", url: "#configurar-o-firewall", children: [
           ]},
           {title: "Configurar o arquivo krb5.conf", url: "#configurar-o-arquivo-krb5conf", children: [
+          ]},
+          {title: "Linkar lib libnss_winbind.so.2", url: "#linkar-lib-libnss_winbindso2", children: [
+          ]},
+          {title: "Arquivo nsswitch", url: "#arquivo-nsswitch", children: [
           ]},
           {title: "Reinciar o samba ad-dc", url: "#reinciar-o-samba-ad-dc", children: [
           ]},
@@ -164,7 +168,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <p><strong>Salvar o arquivo</strong></p>
 <p>Para salvar: <code>control+o</code>e para sair: <code>control+x</code></p>
 <p>=======================================================================</p>
-<h3 id="veririficar-processo-do-samba-rodando">Veririficar processo do samba rodando:</h3>
+<h3 id="verificar-processo-do-samba-rodando">Verificar processo do samba rodando:</h3>
 <p>Veririficar se existe algum processo do samba rodando, com o comando:</p>
 <pre><code> ps ax | egrep &quot;samba|smbd|nmbd|winbindd&quot;
 </code></pre>
@@ -229,124 +233,61 @@ System clock synchronized: yes
 <p>Instalar as dependências dos pacotes para instalar e compilar o <strong>samba AD-DC</strong>. No <strong>terminal</strong> fazer um arquivo do tipo script executável e inserir os comandos:</p>
 <pre><code>nano depende.sh
 </code></pre>
-<p>Inserir os comandos (copie e cole para seu arquivo):</p>
+<p>Inserir os comandos (copie e cole para seu arquivo): </p>
+<p><code>Atualizado em 03/02/2024</code></p>
 <pre><code>set -xueo pipefail
 
-yum update -y
-yum install -y dnf-plugins-core
-yum install -y epel-release
-
-yum -v repolist all
-yum config-manager --set-enabled PowerTools -y || \
-    yum config-manager --set-enabled powertools -y
-yum config-manager --set-enabled Devel -y || \
-    yum config-manager --set-enabled devel -y
-yum update -y
+dnf install -y epel-release
+dnf config-manager --enable epel
+dnf install -y yum-utils
+dnf config-manager --set-enabled powertools
+dnf update -y
 
 yum install -y \
-    --setopt=install_weak_deps=False \
-    &quot;@Development Tools&quot; \
-    acl \
-    attr \
-    autoconf \
-    avahi-devel \
-    bind-utils \
-    binutils \
-    bison \
-    ccache \
-    chrpath \
-    cups-devel \
-    curl \
-    dbus-devel \
-    docbook-dtds \
-    docbook-style-xsl \
-    flex \
-    gawk \
-    gcc \
-    gdb \
-    git \
-    glib2-devel \
-    glibc-common \
-    glibc-langpack-en \
-    glusterfs-api-devel \
-    glusterfs-devel \
-    gnutls-devel \
-    gpgme-devel \
-    gzip \
-    hostname \
-    htop \
-    jansson-devel \
-    keyutils-libs-devel \
-    krb5-devel \
-    krb5-server \
-    libacl-devel \
-    libarchive-devel \
-    libattr-devel \
-    libblkid-devel \
-    libbsd-devel \
-    libcap-devel \
-    libcephfs-devel \
-    libicu-devel \
-    libnsl2-devel \
-    libpcap-devel \
-    libtasn1-devel \
-    libtasn1-tools \
-    libtirpc-devel \
-    libunwind-devel \
-    libuuid-devel \
-    libxslt \
-    lmdb \
-    lmdb-devel \
-    make \
-    mingw64-gcc \
-    ncurses-devel \
-    openldap-devel \
-    pam-devel \
-    patch \
-    perl \
-    perl-Archive-Tar \
-    perl-ExtUtils-MakeMaker \
-    perl-JSON \
-    perl-Parse-Yapp \
-    perl-Test-Simple \
-    perl-generators \
-    perl-interpreter \
-    pkgconfig \
-    popt-devel \
-    procps-ng \
-    psmisc \
-    python3 \
-    python3-cryptography \
-    python3-devel \
-    python3-dns \
-    python3-gpg \
-    python3-iso8601 \
-    python3-libsemanage \
-    python3-markdown \
-    python3-policycoreutils \
-    python3-pyasn1 \
-    python3-setproctitle \
-    quota-devel \
-    readline-devel \
-    redhat-lsb \
-    rng-tools \
-    rpcgen \
-    rpcsvc-proto-devel \
-    rsync \
-    sed \
-    sudo \
-    systemd-devel \
-    tar \
-    tree \
-    wget \
-    which \
-    xfsprogs-devel \
-    yum-utils \
-    zlib-devel \
-    nano \
-    krb5-workstation \ 
-
-yum clean all 
+gcc.x86_64 \
+tar \
+python36.x86_64 \
+wget \
+nano \
+perl.x86_64 perl-Parse-Yapp.noarch \
+libacl.x86_64 \
+nfs4-acl-tools.x86_64 \
+gnutls-devel.x86_64 \
+zlib.x86_64 \
+krb5-devel.x86_64 \
+krb5-server \
+libblkid.x86_64 \
+dbus-devel.x86_64 \
+jansson-devel.x86_64 \
+readline.x86_64 \
+bsdtar.x86_64 \
+docbook-dtds.noarch \
+pam-devel \
+cups \
+python3-markdown \
+patchutils.x86_64 \
+gpgme-devel \
+flex \
+python3-iso8601.noarch \
+python3-cryptography.x86_64 \
+python36-devel \
+lmdb.x86_64 \
+libarchive-devel \
+libacl-devel \
+openldap-devel \
+python3-dns \
+perl-Convert-ASN1.noarch \
+rpcgen.x86_64 \
+perl-App-cpanminus \
+popt-devel.x86_64 \
+zlib-devel.x86_64 \
+lmdb-devel.x86_64 \
+bison-devel.x86_64 \
+libtasn1-tools \
+bison \
+perl-JSON \
+yum clean all \
+yum autoremove -y 
 </code></pre>
 <p><strong>Salvar o arquivo</strong></p>
 <p>Para salvar: <code>control+o</code> e para sair: <code>control+x</code></p>
@@ -440,10 +381,14 @@ WantedBy=multi-user.target
 <p>=======================================================================</p>
 <h3 id="configurar-o-firewall">Configurar o Firewall</h3>
 <p>Adicionar serviços no firewall, com o comando abaixo:</p>
+<p><code>Atualizado em 03/02/2024</code></p>
 <pre><code>firewall-cmd --add-service={dns,ldap,ldaps,kerberos}
 </code></pre>
-<p>Abrir as portas:</p>
-<pre><code>firewall-cmd --add-port={389/udp,135/tcp,135/udp,138/udp,138/tcp,137/tcp,137/udp,139/udp,139/tcp,445/tcp,445/udp,3268/udp,3268/tcp,3269/tcp,3269/udp,49152/tcp}
+<p>Abrir portas <code>TCP</code>:</p>
+<pre><code>firewall-cmd --permanent --zone=public --add-port={53/tcp,135/tcp,139/tcp,389/tcp,445/tcp,465/tcp,636/tcp,3268/tcp,3269/tcp,49152-65535/tcp};
+</code></pre>
+<p>Abrir portas <code>UDP</code>:</p>
+<pre><code>firewall-cmd --permanent --zone=public --add-port={88/udp,123/udp,137/udp,138/udp,389/udp,464/udp};
 </code></pre>
 <p>Recarregar o Firewall:</p>
 <pre><code>firewall-cmd --reload
@@ -453,21 +398,29 @@ WantedBy=multi-user.target
 <p>Copiar o arquivo <strong>krb5.conf</strong> para o diretório <strong>/etc</strong> utilizando o comando:</p>
 <pre><code>cp /usr/local/samba/private/krb5.conf /etc/krb5.conf
 </code></pre>
-<p>Executar o comando <strong>testparm</strong> para verificação de erros de sintaxe:</p>
-<pre><code>testparm
-</code></pre>
-<p>A saída do comando pode ser parecido com essa:</p>
-<pre><code>Load smb config files from /etc/samba/smb.conf
-Loaded services file OK.
-Weak crypto is allowed
-
-Server role: ROLE_DOMAIN_MEMBER
-
-Press enter to see a dump of your service definitions
-</code></pre>
 <p>=======================================================================</p>
+<h3 id="linkar-lib-libnss_winbindso2">Linkar lib <code>libnss_winbind.so.2</code></h3>
+<p>Linkando a lib <code>libnss_winbind.so.2</code>  com os comandos:</p>
+<pre><code>ln -s /usr/local/samba/lib/libnss_winbind.so.2 /lib64/
+ln -s /lib64/libnss_winbind.so.2 /lib64/libnss_winbind.so
+ldconfig
+</code></pre>
+<h3 id="arquivo-nsswitch">Arquivo nsswitch</h3>
+<p>Editar o arquivo <code>/etc/nsswitch.conf</code> para habilitar o nome dos <code>usuários</code> e <code>grupos</code> na estação local. Usar o comando:</p>
+<pre><code>nano /etc/nsswitch.conf
+</code></pre>
+<pre><code>Localize a linha:
+
+De:
+passwd:         sss files systemd
+group:          sss files systemd
+
+ALTERAR PARA:
+passwd:         files winbind
+group:          files winbind
+</code></pre>
 <h3 id="reinciar-o-samba-ad-dc">Reinciar o samba ad-dc</h3>
-<p>Reinciar o samba ad-dc com o comando:</p>
+<p>Reinciar o <code>samba ad-dc</code> com o comando:</p>
 <pre><code>smbcontrol all reload-config
 </code></pre>
 <h3 id="juntando-se-join-ad-ao-active-directory-dc1">Juntando-se (join AD) ao Active Directory (DC1)</h3>
@@ -511,7 +464,7 @@ Press enter to see a dump of your service definitions
 
 <footer class="container-fluid wm-page-content">
       <p>
-        <a href="https://github.com/doguibnu/rocky-linux-8-7-samba-ad-dc-complete/edit/main/docs/rocky-linux-8-7-samba-ad-dc-complete/samba-ad2.md"><i class="fa fa-github"></i>
+        <a href="https://github.com/doguibnu/rocky-linux-8x-ad/edit/main/docs/rocky-linux-8-7-samba-ad-dc-complete/samba-ad2.md"><i class="fa fa-github"></i>
 Edit on GitHub</a>
       </p>
   <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>

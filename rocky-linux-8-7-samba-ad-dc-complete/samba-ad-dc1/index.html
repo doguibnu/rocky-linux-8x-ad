@@ -82,6 +82,10 @@
           ]},
           {title: "Replica\u00e7\u00e3o do SysVol", url: "#replicacao-do-sysvol", children: [
           ]},
+          {title: "Backup arquivo idmap.ldb", url: "#backup-arquivo-idmapldb", children: [
+          ]},
+          {title: "Sysvol Backup (DC1 para DC2)", url: "#sysvol-backup-dc1-para-dc2", children: [
+          ]},
           {title: "Script no crontab", url: "#script-no-crontab", children: [
           ]},
         ];
@@ -234,121 +238,60 @@ System clock synchronized: yes
 <pre><code>nano depende.sh
 </code></pre>
 <p>Inserir as linhas abaixo para o seu arquivo:</p>
+<p><code>Atualizado em 03/02/2024</code></p>
 <pre><code>set -xueo pipefail
 
-yum update -y
-yum install -y dnf-plugins-core
-yum install -y epel-release
-
-yum -v repolist all
-yum config-manager --set-enabled PowerTools -y || \
-    yum config-manager --set-enabled powertools -y
-yum config-manager --set-enabled Devel -y || \
-    yum config-manager --set-enabled devel -y
-yum update -y
+dnf install -y epel-release
+dnf config-manager --enable epel
+dnf install -y yum-utils
+dnf config-manager --set-enabled powertools
+dnf update -y
 
 yum install -y \
-    --setopt=install_weak_deps=False \
-    &quot;@Development Tools&quot; \
-    acl \
-    attr \
-    autoconf \
-    avahi-devel \
-    bind-utils \
-    binutils \
-    bison \
-    ccache \
-    chrpath \
-    cups-devel \
-    curl \
-    dbus-devel \
-    docbook-dtds \
-    docbook-style-xsl \
-    flex \
-    gawk \
-    gcc \
-    gdb \
-    git \
-    glib2-devel \
-    glibc-common \
-    glibc-langpack-en \
-    glusterfs-api-devel \
-    glusterfs-devel \
-    gnutls-devel \
-    gpgme-devel \
-    gzip \
-    hostname \
-    htop \
-    jansson-devel \
-    keyutils-libs-devel \
-    krb5-devel \
-    krb5-server \
-    libacl-devel \
-    libarchive-devel \
-    libattr-devel \
-    libblkid-devel \
-    libbsd-devel \
-    libcap-devel \
-    libcephfs-devel \
-    libicu-devel \
-    libnsl2-devel \
-    libpcap-devel \
-    libtasn1-devel \
-    libtasn1-tools \
-    libtirpc-devel \
-    libunwind-devel \
-    libuuid-devel \
-    libxslt \
-    lmdb \
-    lmdb-devel \
-    make \
-    mingw64-gcc \
-    ncurses-devel \
-    openldap-devel \
-    pam-devel \
-    patch \
-    perl \
-    perl-Archive-Tar \
-    perl-ExtUtils-MakeMaker \
-    perl-JSON \
-    perl-Parse-Yapp \
-    perl-Test-Simple \
-    perl-generators \
-    perl-interpreter \
-    pkgconfig \
-    popt-devel \
-    procps-ng \
-    psmisc \
-    python3 \
-    python3-cryptography \
-    python3-devel \
-    python3-dns \
-    python3-gpg \
-    python3-iso8601 \
-    python3-libsemanage \
-    python3-markdown \
-    python3-policycoreutils \
-    python3-pyasn1 \
-    python3-setproctitle \
-    quota-devel \
-    readline-devel \
-    redhat-lsb \
-    rng-tools \
-    rpcgen \
-    rpcsvc-proto-devel \
-    rsync \
-    sed \
-    sudo \
-    systemd-devel \
-    tar \
-    tree \
-    wget \
-    which \
-    xfsprogs-devel \
-    yum-utils \
-    zlib-devel \
-    nano \
-    krb5-workstation
+gcc.x86_64 \
+tar \
+python36.x86_64 \
+wget \
+nano \
+perl.x86_64 perl-Parse-Yapp.noarch \
+libacl.x86_64 \
+nfs4-acl-tools.x86_64 \
+gnutls-devel.x86_64 \
+zlib.x86_64 \
+krb5-devel.x86_64 \
+krb5-server \
+libblkid.x86_64 \
+dbus-devel.x86_64 \
+jansson-devel.x86_64 \
+readline.x86_64 \
+bsdtar.x86_64 \
+docbook-dtds.noarch \
+pam-devel \
+cups \
+python3-markdown \
+patchutils.x86_64 \
+gpgme-devel \
+flex \
+python3-iso8601.noarch \
+python3-cryptography.x86_64 \
+python36-devel \
+lmdb.x86_64 \
+libarchive-devel \
+libacl-devel \
+openldap-devel \
+python3-dns \
+perl-Convert-ASN1.noarch \
+rpcgen.x86_64 \
+perl-App-cpanminus \
+popt-devel.x86_64 \
+zlib-devel.x86_64 \
+lmdb-devel.x86_64 \
+bison-devel.x86_64 \
+libtasn1-tools \
+bison \
+perl-JSON \
+
+yum autoremove -y
 
 yum clean all 
 </code></pre>
@@ -517,8 +460,11 @@ Warning: Your password will expire in 41 days on Tue 22 Sep 2020 03:41:22 PM IST
 <p>Adicionar serviços:</p>
 <pre><code>firewall-cmd --add-service={dns,ldap,ldaps,kerberos}
 </code></pre>
-<p>Abrir portas:</p>
-<pre><code>firewall-cmd --add-port={389/udp,135/tcp,135/udp,138/udp,138/tcp,137/tcp,137/udp,139/udp,139/tcp,445/tcp,445/udp,3268/udp,3268/tcp,3269/tcp,3269/udp,49152/tcp}
+<p>Abrir portas <code>TCP</code> :</p>
+<pre><code>firewall-cmd --permanent --zone=public --add-port={53/tcp,135/tcp,139/tcp,389/tcp,445/tcp,465/tcp,636/tcp,3268/tcp,3269/tcp,49152-65535/tcp};
+</code></pre>
+<p>Abrir portas <code>UDP</code>:</p>
+<pre><code>firewall-cmd --permanent --zone=public --add-port={88/udp,123/udp,137/udp,138/udp,389/udp,464/udp};
 </code></pre>
 <p>Recarregar o Firewall:</p>
 <pre><code>firewall-cmd --reload
@@ -544,6 +490,20 @@ Your public key has been saved in /root/.ssh/id_rsa.pub.
 <p>Conecte-se via ssh em seu <strong>DC2</strong> e mude as permissões de acesso para que o usuário do dc2 possa escrever no diretório, com o comando:</p>
 <pre><code>chown root.user-dc2 -R /usr/local/samba/var/locks/sysvol/
 </code></pre>
+<p>======================================================================</p>
+<h3 id="backup-arquivo-idmapldb">Backup arquivo <code>idmap.ldb</code></h3>
+<p>Voltando ao seu <strong>DC1</strong> </p>
+<p>Para fazer a <code>replicação</code> do <code>sysvol</code> do <strong>DC1</strong> para o <strong>DC2</strong>, o dc2 deve ter o mesmo mapa <strong>ID</strong> para os usuários e grupos. Execute o comando abaixo para fazer um backup do arquivo <strong>idmap.ldb:</strong> </p>
+<pre><code>tdbbackup -s.bak /usr/local/samba/private/idmap.ldb idmap.bak
+</code></pre>
+<p>Com o arquivo de backup gerado: <code>idmap.bak</code> copie o mesmo para o caminho de seu <strong>DC2</strong> com o comando:</p>
+<pre><code>scp /usr/local/samba/private/idmap.bak root@IP-SEU-DC2:/usr/local/samba/private/
+</code></pre>
+<p><strong>Conecte-se ao DC2</strong> para renomear o arquivo de backup enviado através do DC1, usando o comando:</p>
+<pre><code>mv /usr/local/samba/private/idmap.ldb.bak idmap.ldb
+</code></pre>
+<p>=======================================================================</p>
+<h3 id="sysvol-backup-dc1-para-dc2">Sysvol Backup (DC1 para DC2)</h3>
 <p>Executando um backup do <code>DC1</code> para o <code>DC2</code>. Para testar, execute o comando utilizando a opção <code>--dry-run</code> para  um teste sem alteração:</p>
 <pre><code>rsync --dry-run -XAavz --delete-after --progress --stats /usr/local/samba/var/locks/sysvol user-dc2@IP-DC2:/usr/local/samba/var/locks/sysvol/
 </code></pre>
@@ -633,7 +593,7 @@ total size is 40  speedup is 0.02 **(DRY RUN)**
 
 <footer class="container-fluid wm-page-content">
       <p>
-        <a href="https://github.com/doguibnu/rocky-linux-8-7-samba-ad-dc-complete/edit/main/docs/rocky-linux-8-7-samba-ad-dc-complete/samba-ad-dc1.md"><i class="fa fa-github"></i>
+        <a href="https://github.com/doguibnu/rocky-linux-8x-ad/edit/main/docs/rocky-linux-8-7-samba-ad-dc-complete/samba-ad-dc1.md"><i class="fa fa-github"></i>
 Edit on GitHub</a>
       </p>
   <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
