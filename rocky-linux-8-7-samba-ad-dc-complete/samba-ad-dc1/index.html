@@ -84,6 +84,8 @@
           ]},
           {title: "Backup arquivo idmap.ldb", url: "#backup-arquivo-idmapldb", children: [
           ]},
+          {title: "NTACL (samba-tool)", url: "#ntacl-samba-tool", children: [
+          ]},
           {title: "Sysvol Backup (DC1 para DC2)", url: "#sysvol-backup-dc1-para-dc2", children: [
           ]},
           {title: "Script no crontab", url: "#script-no-crontab", children: [
@@ -499,8 +501,13 @@ Your public key has been saved in /root/.ssh/id_rsa.pub.
 <p>Com o arquivo de backup gerado: <code>idmap.bak</code> copie o mesmo para o caminho de seu <strong>DC2</strong> com o comando:</p>
 <pre><code>scp /usr/local/samba/private/idmap.bak root@IP-SEU-DC2:/usr/local/samba/private/
 </code></pre>
-<p><strong>Conecte-se ao DC2</strong> para renomear o arquivo de backup enviado através do DC1, usando o comando:</p>
-<pre><code>mv /usr/local/samba/private/idmap.ldb.bak idmap.ldb
+<p><strong>Conecte-se ao DC2</strong> para renomear o arquivo de backup enviado através do DC1 (idmap.bak), usando o comando:</p>
+<pre><code>mv /usr/local/samba/private/idmap.bak idmap.ldb
+</code></pre>
+<p>======================================================================</p>
+<h3 id="ntacl-samba-tool">NTACL (samba-tool)</h3>
+<p>Logo após executar o comando abaixo nos <strong>dois DCs</strong> </p>
+<pre><code>samba-tool ntacl sysvolreset
 </code></pre>
 <p>=======================================================================</p>
 <h3 id="sysvol-backup-dc1-para-dc2">Sysvol Backup (DC1 para DC2)</h3>
