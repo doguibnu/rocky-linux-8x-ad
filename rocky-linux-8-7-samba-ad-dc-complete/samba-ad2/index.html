@@ -72,6 +72,8 @@
           ]},
           {title: "Arquivo nsswitch", url: "#arquivo-nsswitch", children: [
           ]},
+          {title: "Desabilitar SELinux", url: "#desabilitar-selinux", children: [
+          ]},
           {title: "Reinciar o samba ad-dc", url: "#reinciar-o-samba-ad-dc", children: [
           ]},
           {title: "Juntando-se (join AD) ao Active Directory (DC1)", url: "#juntando-se-join-ad-ao-active-directory-dc1", children: [
@@ -405,6 +407,7 @@ WantedBy=multi-user.target
 ln -s /lib64/libnss_winbind.so.2 /lib64/libnss_winbind.so
 ldconfig
 </code></pre>
+<p>=======================================================================</p>
 <h3 id="arquivo-nsswitch">Arquivo nsswitch</h3>
 <p>Editar o arquivo <code>/etc/nsswitch.conf</code> para habilitar o nome dos <code>usuários</code> e <code>grupos</code> na estação local. Usar o comando:</p>
 <pre><code>nano /etc/nsswitch.conf
@@ -419,6 +422,18 @@ ALTERAR PARA:
 passwd:         files winbind
 group:          files winbind
 </code></pre>
+<p>======================================================================</p>
+<h3 id="desabilitar-selinux">Desabilitar SELinux</h3>
+<p>Editar o arquivo <code>/etc/selinux/config</code> :</p>
+<pre><code>nano /etc/selinux/config
+</code></pre>
+<p>Encontre a linha e mude para <code>disabled</code> como mostra abaixo:</p>
+<pre><code>#  disabled - No SELinux policy is loaded.
+SELINUX=disabled
+</code></pre>
+<p>Salve o arquivo:</p>
+<p>Para salvar: <code>control+o</code> e para sair <code>control+x</code></p>
+<p>======================================================================</p>
 <h3 id="reinciar-o-samba-ad-dc">Reinciar o samba ad-dc</h3>
 <p>Reinciar o <code>samba ad-dc</code> com o comando:</p>
 <pre><code>smbcontrol all reload-config

@@ -58,6 +58,8 @@
           ]},
           {title: "Verificar dispositivo de rede", url: "#verificar-dispositivo-de-rede", children: [
           ]},
+          {title: "Desabilitar SELinux", url: "#desabilitar-selinux", children: [
+          ]},
           {title: "Reboot o sistema", url: "#reboot-o-sistema", children: [
           ]},
           {title: "Provisionar o Samba", url: "#provisionar-o-samba", children: [
@@ -387,6 +389,17 @@ WantedBy=multi-user.target
 </code></pre>
 <p><strong>OBS</strong>: o <strong>ens18</strong> neste caso é seu dispositivo</p>
 <p>=======================================================================</p>
+<h3 id="desabilitar-selinux">Desabilitar SELinux</h3>
+<p>Editar o arquivo <code>/etc/selinux/config</code> : </p>
+<pre><code>nano /etc/selinux/config
+</code></pre>
+<p>Encontre a linha e mude para <code>disabled</code> como mostra abaixo:</p>
+<pre><code>#  disabled - No SELinux policy is loaded.
+SELINUX=disabled
+</code></pre>
+<p>Salve o arquivo:</p>
+<p>Para salvar: <code>control+o</code> e para sair <code>control+x</code> </p>
+<p>======================================================================</p>
 <h3 id="reboot-o-sistema">Reboot o sistema</h3>
 <p>Fazer um reboot do sistema com o comando:</p>
 <pre><code>reboot
